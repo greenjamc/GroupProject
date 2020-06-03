@@ -70,7 +70,6 @@ import java.nio.file.Paths;
 import java.util.AbstractMap;
 
 //standard Java data structures/collections
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -123,13 +122,13 @@ public class DataEngine {
     }//end class MapEntryConverter
 
     //files with external datum to import into engine
-    public static final String fileNameCountyEmploymentWages = "xml/US_St_Cn_Table_Workforce_Wages.xml";
-    public static final String fileNameCountyList = "csv/usa_county_list.csv";
-    public static final String fileNameCountyMedianIncome = "json/Median_Income_County.json";
-    public static final String fileNameCountyPopulationTax = "csv/Population_By_County_State_County_Tax.csv";
-    public static final String fileNameCountyUnemployment = "xlsx/Unemployment_By_County.xlsx";
-    public static final String fileNameStateExports = "xlsx/Exports_By_State_2012.xlsx";
-    public static final String fileNameStateTaxRates = "xlsx/State_Tax_Rates.xlsx";
+    public static final String fileNameCountyEmploymentWages = "input_data/xml/US_St_Cn_Table_Workforce_Wages.xml";
+    public static final String fileNameCountyList = "input_data/csv/usa_county_list.csv";
+    public static final String fileNameCountyMedianIncome = "input_data/json/Median_Income_County.json";
+    public static final String fileNameCountyPopulationTax = "input_data/csv/Population_By_County_State_County_Tax.csv";
+    public static final String fileNameCountyUnemployment = "input_data/xlsx/Unemployment_By_County.xlsx";
+    public static final String fileNameStateExports = "input_data/xlsx/Exports_By_State_2012.xlsx";
+    public static final String fileNameStateTaxRates = "input_data/xlsx/State_Tax_Rates.xlsx";
 
     // value for empty column
     private static final String EMPTY_COLUMN_VALUE = "None";
@@ -150,7 +149,7 @@ public class DataEngine {
      * constructor to take Boolean echoImportFlag
      *
      * @param echoImportFlag indicates to echo each data import from external
-     * file of time, number of records.
+     *                       file of time, number of records.
      */
     public DataEngine(boolean echoImportFlag) {
         this.echoImportFlag = echoImportFlag;
@@ -226,7 +225,6 @@ public class DataEngine {
         List<Map<String, String>> list = null;
 
         String[] filePathExt = filePath.split("\\.");
-
         switch (filePathExt[1]) {
 
             case "csv":
@@ -253,7 +251,6 @@ public class DataEngine {
     /**
      * Import or load datum from external data files into internal data
      * structures
-     *
      */
     public final void loadData() {
 
@@ -573,14 +570,14 @@ public class DataEngine {
 
             //read first row - column headers
             Iterator<Row> rowIter = sheet.iterator();
-            if(!rowIter.hasNext()) return list;
+            if (!rowIter.hasNext()) return list;
             Row row;
 
             // iterate on cells for the current row
             Iterator<Cell> cellIter;
             List<StringBuilder> headers = new ArrayList<>();
 
-            for(int i = 0; i < rowConcatIndex[1]; i++) {
+            for (int i = 0; i < rowConcatIndex[1]; i++) {
                 row = rowIter.next();
                 if (i < rowConcatIndex[0]) continue;
                 cellIter = row.cellIterator();
@@ -602,7 +599,8 @@ public class DataEngine {
             while (rowIter.hasNext()) {
                 idx = 0;
                 // skip empty column
-                if(headers.get(idx).toString().equals("")) continue;;
+                if (headers.get(idx).toString().equals("")) continue;
+                ;
                 Map<String, String> map = new HashMap<>(rowSize);
                 row = rowIter.next();
                 boolean isCommentLine = false;
@@ -612,7 +610,7 @@ public class DataEngine {
 
                     Cell cell = cellIter.next();
                     String cellValue = cell.toString();
-                    if(cellValue.endsWith(COMMENT_LINE_END_STRING)) {
+                    if (cellValue.endsWith(COMMENT_LINE_END_STRING)) {
                         isCommentLine = true;
                         break;
                     }
@@ -623,7 +621,7 @@ public class DataEngine {
 
                 }//end while
 
-                if(!isCommentLine) list.add(map);
+                if (!isCommentLine) list.add(map);
 
             }//end while
             workbook.close();
@@ -731,7 +729,7 @@ public class DataEngine {
                 line = reader.readLine();
                 line = line.trim();
                 if (line.contentEquals("</state-county-wage-data>")) {
-                    break;  //xml file footer
+                    break;  //input_data.xml file footer
                 }//end if
 
                 if (line.contentEquals("<record>")) {
